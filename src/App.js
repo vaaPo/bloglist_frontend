@@ -1,6 +1,9 @@
 import React from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
+import Notification from './components/Notification/Notification';    //notifications
+import OkNotification from './components/Notification/OkNotification';    //notifications
+
 
 class App extends React.Component {
   constructor(props) {
