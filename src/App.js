@@ -52,27 +52,27 @@ class App extends React.Component {
 login = async (event) => {
   event.preventDefault();
   try{
+    console.log('App.js login try before loginService.login');
     const user = await loginService.login({
       username: this.state.username,
       password: this.state.password
     });
+    console.log('App.js login try after loginService.login');
 
     this.setState({ username: '', password: '', user });
   } catch(exception) {
     this.setState({
-      error: 'käyttäjätunnus tai salasana virheellinen',
+      error: 'username or password is wrong',
     });
     setTimeout(() => {
-      this.setState({ error: null, oklogin: 'logging in' });
+      this.setState({ error: null });
     }, 5000);
   }
 }
 
-
-
-  handleNoteChange = (event) => {
-    this.setState({ newNote: event.target.value });
-  }
+handleBlogChange = (event) => {
+  this.setState({ newBlog: event.target.value });
+}
 /**
   handleLoginFieldChange = (event) => {
     if (event.target.name === 'password') {
@@ -82,9 +82,9 @@ login = async (event) => {
     }
   }
  */
-  handleLoginFieldChange = (event) => {
-    this.setState({ [event.target.name]: event.target.value });
-  }
+handleLoginFieldChange = (event) => {
+  this.setState({ [event.target.name]: event.target.value });
+}
 
 /**
  * const field = 'name'
@@ -101,23 +101,18 @@ login = async (event) => {
   }
  */
 
-  toggleVisible = () => {
-    this.setState({ showAll: !this.state.showAll });
-  }
+toggleVisible = () => {
+  this.setState({ showAll: !this.state.showAll });
+}
 
-  render() {
-    return (
-      <div>
-      <h1>Muistiinpanot</h1>
-
-      <Notification message={this.state.error} />
-
+render() {
+  const loginForm = () => (
+    <div>
       <h2>Log in to application</h2>
-      <okNotification message={this.state.oklogin} />
 
       <form onSubmit={this.login}>
         <div>
-          käyttäjätunnus
+            username
           <input
             type="text"
             name="username"
@@ -126,7 +121,7 @@ login = async (event) => {
           />
         </div>
         <div>
-          salasana
+          password
           <input
             type="password"
             name="password"
@@ -134,31 +129,64 @@ login = async (event) => {
             onChange={this.handleLoginFieldChange}
           />
         </div>
-        <button type="submit">kirjaudu</button>
+        <button>LOGIN</button>
       </form>
+    </div>
+  );
 
-      <h2>Create new Blog</h2>
+//        <button type="submit">login</button>
 
+
+  const blogForm = () => (
+    <div>
+      <h2>Create new blog</h2>
       <form onSubmit={this.addBlog}>
         <input
-          value={this.state.newBloge}
+          value={this.state.newBlog}
           onChange={this.handleBlogChange}
         />
-        <button type="submit">save</button>
+        <button type="submit">create new blog</button>
       </form>
+    </div>
+  );
 
+  const blogsRows = () => (
+    <div>
       <h2>Blogs</h2>
       {this.state.blogs.map(blog => 
-          <Blog key={blog._id} blog={blog}/>
-        )}
-      </div >
-    );
-  }
+        <Blog key={blog._id} blog={blog}/>
+      )}
+    </div>
+  );
+
+  const loggedInuser = () => (
+    <div>
+      <p>{this.state.user.name} logged in</p>
+    </div>
+  );
+
+  return (
+    <div>
+      <h1>Blogs</h1>
+
+      <Notification message={this.state.error} />
+      <okNotification message={this.state.oklogin} />
+
+      {this.state.user === null && loginForm()}
+      {this.state.user !== null && loggedInuser()}
+      {this.state.user !== null && blogsRows()}
+      {this.state.user !== null && blogForm()}
+    </div >
+  );
+}
 }
 
 export default App;
 /**
- *       <div>
+
+
+
+*       <div>
         <h2>blogs</h2>
         {this.state.blogs.map(blog => 
           <Blog key={blog._id} blog={blog}/>
