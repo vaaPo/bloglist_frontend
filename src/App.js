@@ -15,7 +15,8 @@ class App extends React.Component {
       error: null,
       username: '',
       password: '',
-      user: null
+      user: null,
+      oklogin: null
     };
   }
 
@@ -25,30 +26,51 @@ class App extends React.Component {
     );
   }
 
+  /**
   addBlog = (event) => {
     event.preventDefault();
     const noteObject = {
       title: this.state.newBlog
     };
-    noteService
-      .create(noteObject)
-      .then(newNote => {
+    blogService
+      .create(blogObject)
+      .then(newBlog => {
         this.setState({
-          notes: this.state.notes.concat(newNote),
-          newNote: ''
+          blogs: this.state.blogs.concat(newBlog),
+          newBlog: ''
         });
       });
   }
+ */
 
   login = (event) => {
     event.preventDefault();
     console.log('logging in with', this.state.username, this.state.password);
+    this.setState({ oklogin: "logging in"});
   }
 
   handleNoteChange = (event) => {
     this.setState({ newNote: event.target.value });
   }
+/**
+  handleLoginFieldChange = (event) => {
+    if (event.target.name === 'password') {
+      this.setState({ password: event.target.value });
+    } else if (event.target.name === 'username') {
+      this.setState({ username: event.target.value });
+    }
+  }
+ */
+  handleLoginFieldChange = (event) => {
+    this.setState({ [event.target.name]: event.target.value });
+  }
 
+/**
+ * const field = 'name'
+   const object = { [field] : 'Arto Hellas' }
+
+ */
+/**
   handlePasswordChange = (event) => {
     this.setState({ password: event.target.value });
   }
@@ -56,6 +78,7 @@ class App extends React.Component {
   handleUsernameChange = (event) => {
     this.setState({ username: event.target.value });
   }
+ */
 
   toggleVisible = () => {
     this.setState({ showAll: !this.state.showAll });
@@ -69,25 +92,28 @@ class App extends React.Component {
       <Notification message={this.state.error} />
 
       <h2>Log in to application</h2>
+      <okNotification message={this.state.oklogin} />
 
       <form onSubmit={this.login}>
         <div>
-          username:
+          käyttäjätunnus
           <input
             type="text"
+            name="username"
             value={this.state.username}
-            onChange={this.handleUsernameChange}
+            onChange={this.handleLoginFieldChange}
           />
         </div>
         <div>
-          password:
+          salasana
           <input
             type="password"
+            name="password"
             value={this.state.password}
-            onChange={this.handlePasswordChange}
+            onChange={this.handleLoginFieldChange}
           />
         </div>
-        <button type="submit">login</button>
+        <button type="submit">kirjaudu</button>
       </form>
 
       <h2>Create new Blog</h2>
