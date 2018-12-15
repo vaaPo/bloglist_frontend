@@ -58,7 +58,7 @@ login = async (event) => {
       password: this.state.password
     });
     console.log('App.js login try after loginService.login');
-
+    blogService.setToken(user.token);
     this.setState({ username: '', password: '', user });
   } catch(exception) {
     this.setState({
