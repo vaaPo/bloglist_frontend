@@ -37,11 +37,13 @@ class App extends React.Component {
 
 
 
-  /**
+
   addBlog = (event) => {
     event.preventDefault();
-    const noteObject = {
-      title: this.state.newBlog
+    const blogObject = {
+      title: this.state.newBlogtitle,
+      author: this.state.newBlogauthor,
+      url: this.state.newBlogurl
     };
     blogService
       .create(blogObject)
@@ -52,8 +54,8 @@ class App extends React.Component {
         });
       });
   }
- */
-/**
+
+  /**
   login = (event) => {
     event.preventDefault();
     console.log('logging in with', this.state.username, this.state.password);
@@ -110,7 +112,8 @@ logout = async (event) => {
 }
 
 handleBlogChange = (event) => {
-  this.setState({ newBlog: event.target.value });
+//  this.setState({ newBlog: event.target.value });
+  this.setState({ [event.target.name]: event.target.value });
 }
 /**
   handleLoginFieldChange = (event) => {
@@ -180,31 +183,37 @@ render() {
     <div>
       <h2>Create new blog</h2>
       <form onSubmit={this.addBlog}>
+        <div>
         <label>title: 
         <input
-          name="addBlogtitle"
+          name="newBlogtitle"
           type="text"
           value={this.state.newBlogtitle} 
           onChange={this.handleBlogChange}
         />
         </label>
+        </div>
+        <div>
         <label>author: 
         <input
-          name="addBlogauthor"
+          name="newBlogauthor"
           type="text"
           value={this.state.newBlogauthor} 
           onChange={this.handleBlogChange}
         />
         </label>
+        </div>
+        <div>
         <label>url: 
         <input
-          name="addBlogurl"
+          name="newBlogurl"
           type="text"
           value={this.state.newBlogurl} 
           onChange={this.handleBlogChange}
         />
         </label>
-        <button type="submit">create new blog</button>
+        </div>
+        <button>create new blog</button>
       </form>
     </div>
   );
