@@ -3,7 +3,7 @@ import Blog from './components/Blog'
 import blogService from './services/blogs'
 import Notification from './components/Notification/Notification';    //notifications
 import OkNotification from './components/Notification/OkNotification';    //notifications
-
+import loginService from './services/login';
 
 class App extends React.Component {
   constructor(props) {
@@ -42,12 +42,33 @@ class App extends React.Component {
       });
   }
  */
-
+/**
   login = (event) => {
     event.preventDefault();
     console.log('logging in with', this.state.username, this.state.password);
     this.setState({ oklogin: "logging in"});
   }
+ */
+login = async (event) => {
+  event.preventDefault();
+  try{
+    const user = await loginService.login({
+      username: this.state.username,
+      password: this.state.password
+    });
+
+    this.setState({ username: '', password: '', user });
+  } catch(exception) {
+    this.setState({
+      error: 'käyttäjätunnus tai salasana virheellinen',
+    });
+    setTimeout(() => {
+      this.setState({ error: null, oklogin: 'logging in' });
+    }, 5000);
+  }
+}
+
+
 
   handleNoteChange = (event) => {
     this.setState({ newNote: event.target.value });
