@@ -16,6 +16,7 @@ class App extends React.Component {
       newBlogurl: '',
       showAll: true,
       error: null,
+      noerror: null,
       username: '',
       password: '',
       user: null,
@@ -30,13 +31,10 @@ class App extends React.Component {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser');  // try in chrome dev console: window.localStorage.getItem('loggedBlogappUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);
-      this.setState({ user });
+      this.setState({ user, noerror: 'componentDidMount' });
       blogService.setToken(user.token);
     }
   }
-
-
-
 
   addBlog = (event) => {
     event.preventDefault();
@@ -50,8 +48,12 @@ class App extends React.Component {
       .then(newBlog => {
         this.setState({
           blogs: this.state.blogs.concat(newBlog),
-          newBlog: ''
+          newBlog: '',
+          noerror: 'blog added'
         });
+        setTimeout(() => {
+          this.setState({noerror: null})
+        }, 5000);
       });
   }
 
@@ -100,7 +102,7 @@ logout = async (event) => {
   try {
     window.localStorage.removeItem('loggedBlogappUser');
     blogService.setToken(null);
-    this.setState({ user: null });
+    this.setState({ user: null, noerror: 'goodbye!' });
   } catch(exception) {
     this.setState({
       error: 'problem when trying logout'
@@ -184,34 +186,34 @@ render() {
       <h2>Create new blog</h2>
       <form onSubmit={this.addBlog}>
         <div>
-        <label>title: 
-        <input
-          name="newBlogtitle"
-          type="text"
-          value={this.state.newBlogtitle} 
-          onChange={this.handleBlogChange}
-        />
-        </label>
+          <label>title: 
+            <input
+              name="newBlogtitle"
+              type="text"
+              value={this.state.newBlogtitle} 
+              onChange={this.handleBlogChange}
+            />
+          </label>
         </div>
         <div>
-        <label>author: 
-        <input
-          name="newBlogauthor"
-          type="text"
-          value={this.state.newBlogauthor} 
-          onChange={this.handleBlogChange}
-        />
-        </label>
+          <label>author: 
+            <input
+              name="newBlogauthor"
+              type="text"
+              value={this.state.newBlogauthor} 
+              onChange={this.handleBlogChange}
+            />
+          </label>
         </div>
         <div>
-        <label>url: 
-        <input
-          name="newBlogurl"
-          type="text"
-          value={this.state.newBlogurl} 
-          onChange={this.handleBlogChange}
-        />
-        </label>
+          <label>url: 
+            <input
+              name="newBlogurl"
+              type="text"
+              value={this.state.newBlogurl} 
+              onChange={this.handleBlogChange}
+            />
+          </label>
         </div>
         <button>create new blog</button>
       </form>
@@ -239,7 +241,7 @@ render() {
       <h1>Blogs</h1>
 
       <Notification message={this.state.error} />
-      <okNotification message={this.state.oklogin} />
+      <OkNotification message={this.state.noerror} />
 
       {this.state.user === null && loginForm()}
       {this.state.user !== null && loggedInuser()}
