@@ -3,6 +3,9 @@ import Blog from './components/Blog'
 import blogService from './services/blogs'
 import Notification from './components/Notification/Notification';    //notifications
 import OkNotification from './components/Notification/OkNotification';    //notifications
+import Togglable from './components/Togglable';
+import LoginForm from './components/LoginForm';
+import BlogForm from './components/NoteForm';
 import loginService from './services/login';
 
 class App extends React.Component {
@@ -43,6 +46,9 @@ class App extends React.Component {
       author: this.state.newBlogauthor,
       url: this.state.newBlogurl
     };
+
+    this.blogForm.toggleVisibility();
+
     blogService
       .create(blogObject)
       .then(newBlog => {
@@ -52,7 +58,7 @@ class App extends React.Component {
           noerror: 'blog added'
         });
         setTimeout(() => {
-          this.setState({noerror: null})
+          this.setState({ noerror: null })
         }, 5000);
       });
   }
@@ -145,11 +151,24 @@ handleLoginFieldChange = (event) => {
   }
  */
 
-toggleVisible = () => {
-  this.setState({ showAll: !this.state.showAll });
-}
+//toggleVisible = () => {
+//  this.setState({ showAll: !this.state.showAll });
+//}
 
 render() {
+
+  const loginForm = () => (
+    <Togglable buttonLabel="login">
+      <LoginForm
+        visible={this.state.visible}
+        username={this.state.username}
+        password={this.state.password}
+        handleChange={this.handleLoginFieldChange}
+        handleSubmit={this.login}
+      />
+    </Togglable>
+  )
+/**
   const loginForm = () => (
     <div>
       <h2>Log in to application</h2>
@@ -177,10 +196,24 @@ render() {
       </form>
     </div>
   );
+ */
 
-//        <button type="submit">login</button>
+  const blogForm = () => (
+    <Togglable buttonLabel="new blog" ref={component => this.blogForm = component}>
+      <BlogForm
+        onSubmit={this.addBlog}
+        value={this.state.newBlog}
+        newBlogtitle={this.state.newBlogtitle}
+        newBlogauthor={this.state.newBlogauthor}
+        newBlogurl={this.state.newBlogurl}
+        handleBlogChange={this.handleBlogChange}
+      />
+    </Togglable>
+  );
 
-
+//const BlogForm = ({ onSubmit, handleBlogChange, newBlogtitle, newBlogauthor, newBlogurl }) => {
+  
+/**
   const blogForm = () => (
     <div>
       <h2>Create new blog</h2>
@@ -219,7 +252,7 @@ render() {
       </form>
     </div>
   );
-
+ */
 
   const blogsRows = () => (
     <div>
@@ -245,8 +278,9 @@ render() {
 
       {this.state.user === null && loginForm()}
       {this.state.user !== null && loggedInuser()}
-      {this.state.user !== null && blogsRows()}
       {this.state.user !== null && blogForm()}
+      {this.state.user !== null && blogsRows()}
+
     </div >
   );
 }
