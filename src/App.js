@@ -24,7 +24,15 @@ class App extends React.Component {
     blogService.getAll().then(blogs =>
       this.setState({ blogs })
     );
+    const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser');  // try in chrome dev console: window.localStorage.getItem('loggedBlogappUser')
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON);
+      this.setState({ user });
+      blogService.setToken(user.token);
+    }
   }
+
+
 
   /**
   addBlog = (event) => {
@@ -49,6 +57,13 @@ class App extends React.Component {
     this.setState({ oklogin: "logging in"});
   }
  */
+  //https://developer.mozilla.org/en-US/docs/Web/API/Storage
+  //window.localStorage.setItem('nimi', 'juha tauriainen')
+  //window.localStorage.getItem('nimi')
+  //window.localStorage.removeItem('nimi')
+
+
+
 login = async (event) => {
   event.preventDefault();
   try{
@@ -58,7 +73,12 @@ login = async (event) => {
       password: this.state.password
     });
     console.log('App.js login try after loginService.login');
+    window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user));
+    console.log('App.js login window.localStorage.getItem(\'loggedBlogAppUser\')');
+
     blogService.setToken(user.token);
+    console.log('App.js login blogService.setToken');
+
     this.setState({ username: '', password: '', user });
   } catch(exception) {
     this.setState({
@@ -67,6 +87,22 @@ login = async (event) => {
     setTimeout(() => {
       this.setState({ error: null });
     }, 5000);
+  }
+}
+
+logout = async (event) => {
+  event.preventDefault();
+  try {
+    window.localStorage.removeItem('loggedBlogappUser');
+    blogService.setToken(null);
+    this.setState({ user: null });
+  } catch(exception) {
+    this.setState({
+      error: 'problem when trying logout'
+    });
+    setTimeout(() => {
+      this.setState({ error: null});
+    },5000);
   }
 }
 
@@ -161,7 +197,7 @@ render() {
 
   const loggedInuser = () => (
     <div>
-      <p>{this.state.user.name} logged in</p>
+      <p>{this.state.user.name} logged in</p><button onClick={this.logout}>logout</button>
     </div>
   );
 
