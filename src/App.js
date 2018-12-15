@@ -11,6 +11,9 @@ class App extends React.Component {
     this.state = {
       blogs: [],
       newBlog: '',
+      newBlogtitle: '',
+      newBlogauthor: '',
+      newBlogurl: '',
       showAll: true,
       error: null,
       username: '',
@@ -177,14 +180,35 @@ render() {
     <div>
       <h2>Create new blog</h2>
       <form onSubmit={this.addBlog}>
+        <label>title: 
         <input
-          value={this.state.newBlog}
+          name="addBlogtitle"
+          type="text"
+          value={this.state.newBlogtitle} 
           onChange={this.handleBlogChange}
         />
+        </label>
+        <label>author: 
+        <input
+          name="addBlogauthor"
+          type="text"
+          value={this.state.newBlogauthor} 
+          onChange={this.handleBlogChange}
+        />
+        </label>
+        <label>url: 
+        <input
+          name="addBlogurl"
+          type="text"
+          value={this.state.newBlogurl} 
+          onChange={this.handleBlogChange}
+        />
+        </label>
         <button type="submit">create new blog</button>
       </form>
     </div>
   );
+
 
   const blogsRows = () => (
     <div>
